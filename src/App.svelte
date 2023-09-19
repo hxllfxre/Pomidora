@@ -1,15 +1,22 @@
 <script lang="ts">
+    import { tick } from "svelte";
+
   let button : any
-  let timer
   let ticking : Boolean = false
   let minutes : any
   let seconds : any
-  let secondsV = 30
-  let minutesV = 0
+  let secondsV = 60
+  let minutesV = 24
   var ringtone = new Audio('/ringtone.mp3')
   var interval : any
 
-  function theTimer() { 
+
+  function time() {
+    if(!ticking) {
+      ticking = true
+      button.innerHTML = 'Reset Timer'
+      interval = setInterval(function() {
+
         secondsV-=1
         if(secondsV < 10) {
           seconds.innerHTML = `0${secondsV}`
@@ -18,31 +25,32 @@
         }
 
         if(secondsV == 0) {
-          secondsV = 60
-          minutesV-=1
+          if(minutesV == 0) {
+            clearInterval(interval)
+            ringtone.play()
+          } else {
+            secondsV = 60
+            minutesV-=1 
+          }
         }
+
         minutes.innerHTML = `${minutesV}:`
 
-        // check if all time has passed
-        if(minutesV === 0 && secondsV === 0) {
-          ringtone.play()
-          interval = setInterval(theTimer, 4000)
-          clearInterval(interval)
-        }
-  }
-
-  function time() {
-    if(seconds.innerHTML == '00') {
-      button.innerHTML = 'Reset Timer'
-      interval = setInterval(theTimer, 1000)
+        console.log(`Minutes: ${minutesV}, Seconds: ${secondsV}`)
+      }, 1000)
     }
     else {
+      ticking = false
       clearInterval(interval)
       secondsV = 60
       minutesV = 24
       minutes.innerHTML = '25:'
       seconds.innerHTML = '00'
       button.innerHTML = 'Start Timer'
+      if(!ringtone.paused) {
+        ringtone.currentTime = 0
+        ringtone.pause()
+      } 
     }
   }
 </script>
