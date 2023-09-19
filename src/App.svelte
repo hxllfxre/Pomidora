@@ -103,7 +103,9 @@
             ringtone.play()
           } else {
             secondsV = 60
-            minutesV-=1 
+            setTimeout(()=> {
+              minutesV-=1 
+            },200)
           }
         }
 
