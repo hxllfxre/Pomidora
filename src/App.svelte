@@ -10,12 +10,33 @@
   let breakButton : any
   var ringtone = new Audio('/ringtone.mp3')
   var interval : any
+  let mode = 'Focus'
 
+  function switchMode() {
+    if(mode == 'Break') {
+      mode = 'Focus'
+      minutes.innerHTML = '25:'
+      breakButton.innerHTML = 'Focus'
+    } else if(mode == 'Focus') {
+      mode = 'Break'
+      minutes.innerHTML = '5:'
+      breakButton.innerHTML = 'Break'
+    }
+  }
 
   function time() {
     if(!ticking) {
       ticking = true
       button.innerHTML = 'Reset Timer'
+
+      if(mode == 'Break') {
+        minutesV = 4
+        secondsV = 60
+      } else {
+        minutesV = 24
+        secondsV = 60
+      }
+
       interval = setInterval(function() {
 
         secondsV-=1
@@ -38,16 +59,25 @@
         minutes.innerHTML = `${minutesV}:`
 
         console.log(`Minutes: ${minutesV}, Seconds: ${secondsV}`)
+        console.log(`Mode: ${mode}`)
       }, 1000)
     }
     else {
       ticking = false
       clearInterval(interval)
-      secondsV = 60
-      minutesV = 24
-      minutes.innerHTML = '25:'
+      if(mode == 'Focus') {
+        secondsV = 60
+        minutesV = 24
+        minutes.innerHTML = '25:'
+      } else {
+        secondsV = 60
+        minutesV = 4
+        minutes.innerHTML = '5:'
+      }
+
       seconds.innerHTML = '00'
       button.innerHTML = 'Start Timer'
+
       if(!ringtone.paused) {
         ringtone.currentTime = 0
         ringtone.pause()
@@ -64,7 +94,7 @@
   </div>
 
   <div class="flex">
-    <button bind:this={breakButton} class="text-white border-white border-2 p-5 rounded-3xl mt-5 w-36 font-extrabold">
+    <button bind:this={breakButton} on:click={()=>switchMode()} class="text-white border-white border-2 p-5 rounded-3xl mt-5 w-36 font-extrabold">
       Break
     </button>
   </div>
