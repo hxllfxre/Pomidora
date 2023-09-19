@@ -8,9 +8,60 @@
   let secondsV = 60
   let minutesV = 24
   let breakButton : any
+  let mode = 'Focus'
+  let main : any
   var ringtone = new Audio('/ringtone.mp3')
   var interval : any
-  let mode = 'Focus'
+  var h1Elements = document.getElementsByTagName("h1");
+
+  function blackButtons() {
+    button.style.color = 'black'
+    button.style.borderColor = 'black'
+    breakButton.style.color = 'black'
+    breakButton.style.borderColor = 'black'
+  }
+  function whiteButtons() {
+    button.style.color = 'white'
+    button.style.borderColor = 'white'
+    breakButton.style.color = 'white'
+    breakButton.style.borderColor = 'white'
+  }
+  function blackHeaders() {
+    for(var i = 0; i < h1Elements.length; i++) {
+      h1Elements[i].style.color = 'black'
+    }
+  }
+  function whiteHeaders() {
+    for(var i = 0; i < h1Elements.length; i++) {
+      h1Elements[i].style.color = 'white'
+    }
+  }
+
+  function switchTheme(clickedId : String) {
+    console.log(clickedId)
+    switch(clickedId) {
+      case 'blue':
+        main.style.backgroundColor = '#9efdef' 
+        blackHeaders()
+        blackButtons()
+      break
+      case 'pink':
+        main.style.backgroundColor = '#df83ff'
+        blackHeaders()
+        blackButtons()
+      break
+      case 'light':
+        main.style.backgroundColor = 'white'
+        blackHeaders()
+        blackButtons()
+      break
+      case 'dark':
+        main.style.backgroundColor = 'black'
+        whiteHeaders()
+        whiteButtons()
+      break
+    }
+  }
 
   function switchMode() {
     if(mode == 'Break') {
@@ -86,7 +137,7 @@
   }
 </script>
 
-<main class="w-screen h-screen flex items-center justify-center flex-col bg-black">
+<main bind:this={main} class="w-screen h-screen flex items-center justify-center flex-col bg-black">
   <h1 class="text-white text-6xl font-extrabold">Pomidora</h1>
   <div class="flex">
     <h1 bind:this={minutes} class="text-3xl font-extrabold text-white">25:</h1>
@@ -102,5 +153,12 @@
   <button on:click={()=>time()} bind:this={button} class="text-white border-white border-2 p-5 rounded-3xl mt-8 w-36 font-extrabold">
     Start Timer
   </button>
+
+  <div class="flex flex-nowrap bottom-0 right-0 absolute p-5 gap-2">
+    <button on:click={()=>switchTheme('light')} class="w-8 h-8 bg-white rounded-xl"></button>
+    <button on:click={()=>switchTheme('dark')} class="w-8 h-8 bg-gray-800 rounded-xl"></button>
+    <button on:click={()=>switchTheme('pink')} class="w-8 h-8 bg-pink-500 rounded-xl"></button>
+    <button on:click={()=>switchTheme('blue')} class="w-8 h-8 bg-blue-300 rounded-xl"></button>
+  </div>
 
 </main>
